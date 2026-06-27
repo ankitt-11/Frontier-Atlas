@@ -51,14 +51,40 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        surface: {
+          DEFAULT: "#FFFFFF",
+          muted: "#F7F6F4",
+        },
+        text: {
+          primary: "#171717",
+          secondary: "#5B5B5B",
+          muted: "#909090",
+        },
+        orange: {
+          DEFAULT: "#FF5A1F",
+          hover: "#FF6C37",
+          soft: "rgba(255, 90, 31, 0.08)",
+        },
+      },
+      boxShadow: {
+        card: '0 10px 35px rgba(0,0,0,.05)',
+        soft: '0 10px 35px rgba(0,0,0,.05)',
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        xl: "24px",
+        "2xl": "28px",
+        lg: "18px",
+        md: "12px",
+        sm: "12px",
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "Inter", "sans-serif"],
+        sans: ['var(--font-inter)', 'Inter', 'sans-serif'],
+      },
+      transitionDuration: {
+        200: '200ms',
+      },
+      transitionTimingFunction: {
+        theme: 'ease',
       },
       keyframes: {
         "accordion-down": {
