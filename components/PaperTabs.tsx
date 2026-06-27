@@ -14,11 +14,11 @@ export default function PaperTabs() {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-1 py-2.5 mr-5 text-[14px] font-medium border-b-2 transition-all duration-150 cursor-pointer whitespace-nowrap
+            className={`px-1 py-3 mr-8 text-[13px] font-normal border-b transition-all duration-150 cursor-pointer whitespace-nowrap
               ${
                 activeTab === tab
-                  ? "text-[#7C3AED] border-[#7C3AED]"
-                  : "text-[#6B7280] border-transparent hover:text-[#374151] hover:border-[#D1D5DB]"
+                  ? "text-[#DB2777] border-[#DB2777]"
+                  : "text-[#6B7280] border-transparent hover:text-[#DB2777] hover:border-transparent"
               }`}
           >
             {tab}

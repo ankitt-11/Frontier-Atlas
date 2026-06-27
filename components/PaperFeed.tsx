@@ -1,167 +1,225 @@
 "use client";
 
-import { TrendingUp, GitFork, MessageCircle, Star } from "lucide-react";
+import { Github, MessageCircle } from "lucide-react";
 import { papers } from "@/data/mockData";
-import { Tag } from "@/components/ui/Tag";
+import Image from "next/image";
+
+/* ─── Tag color map ──────────────────────────────────────────────────────── */
+const TAG_COLORS: Record<string, { bg: string; text: string; dot: string; border?: string }> = {
+  purple: { bg: "bg-[#F3E8FF]", text: "text-[#6B21A8]", dot: "bg-[#9333EA]" },
+  blue: { bg: "bg-[#E0F2FE]", text: "text-[#0369A1]", dot: "bg-[#0284C7]" },
+  green: { bg: "bg-[#E6F3D6]", text: "text-[#2B501B]", dot: "bg-[#5B8D36]" },
+  cyan: { bg: "bg-[#D6F0E6]", text: "text-[#125861]", dot: "bg-[#258B93]" },
+  gray: { bg: "bg-white", text: "text-[#171717]", dot: "", border: "border border-[#E2E8F0]" },
+};
 
 function getTagColor(label: string): string {
-  const mapping: Record<string, string> = {
-    "Agents": "purple",
-    "Coding Agents": "blue",
-    "Language Modeling": "blue",
-    "Math": "orange",
+  const map: Record<string, string> = {
+    Agents: "green",
+    "Coding Agents": "cyan",
+    "Language Modeling": "cyan",
+    Math: "cyan",
     "World Knowledge": "green",
     "Long Context": "purple",
-    "Efficiency": "green",
-    "Reasoning": "orange",
+    Efficiency: "green",
+    Reasoning: "green",
     "Model Merging": "purple",
+    "Document Layout Analysis": "green",
+    "Image Understanding": "blue",
+    OCR: "purple",
+    "Reinforcement Learning": "blue",
   };
-  return mapping[label] || "gray";
+  return map[label] || "gray";
 }
 
-function processTags(tags: string[], additionalTags: string[] = []) {
-  const allTags = [...tags, ...additionalTags];
-  const colorTags: { label: string; color: string }[] = [];
-  const grayTags: string[] = [];
-
-  allTags.forEach((tag) => {
-    const color = getTagColor(tag);
-    if (color !== "gray") {
-      colorTags.push({ label: tag, color });
-    } else {
-      grayTags.push(tag);
-    }
+function processTags(tags: string[], extra: string[] = []) {
+  const all = [...tags, ...extra];
+  const colored: { label: string; color: string }[] = [];
+  const gray: string[] = [];
+  all.forEach((t) => {
+    const c = getTagColor(t);
+    if (c !== "gray") colored.push({ label: t, color: c });
+    else gray.push(t);
   });
-
-  return { colorTags, grayTags };
+  return { colored, gray };
 }
 
-function parseSota(sotaStr: string) {
-  // sota: "SOTA on AIME 2026, HMMT Feb 2026, PostTrainBench • #3 on FrontierSWE, NL2Repo"
-  if (!sotaStr) return { primary: "", secondary: "" };
-  const parts = sotaStr.split(" • ");
-  const primary = parts[0].replace(/^SOTA on\s+/i, "");
-  const secondary = parts.slice(1).join(" • ");
-  return { primary, secondary };
-}
+/* ─── Pill tag ───────────────────────────────────────────────────────────── */
+function Pill({ label, colorKey }: { label: string; colorKey: string }) {
+  const c = TAG_COLORS[colorKey] || TAG_COLORS.gray;
+  const isGray = colorKey === "gray";
 
-function PaperThumbnail() {
   return (
-    <div className="w-[72px] h-[96px] shrink-0 border border-[#E5E7EB] rounded-lg bg-white overflow-hidden p-1.5 flex flex-col gap-[3px]">
-      {/* Title line — dark */}
-      <div className="w-full h-[5px] bg-[#374151] rounded-sm" />
-      <div className="w-4/5 h-[4px] bg-[#6B7280] rounded-sm" />
-      {/* Author */}
-      <div className="w-full h-[3px] bg-[#D1D5DB] rounded-sm mt-[2px]" />
-      {/* Abstract lines */}
-      <div className="w-full h-[2px] bg-[#E5E7EB] rounded-sm mt-[2px]" />
-      <div className="w-full h-[2px] bg-[#E5E7EB] rounded-sm" />
-      <div className="w-3/4 h-[2px] bg-[#E5E7EB] rounded-sm" />
-      {/* Chart figure */}
-      <div className="w-full mt-[3px] bg-[#EFF6FF] border border-[#BFDBFE] rounded-sm p-[2px] flex items-end gap-[2px] h-[22px]">
-        {[40, 70, 50, 85, 60, 90, 55, 75].map((h, i) => (
-          <div
-            key={i}
-            className="flex-1 bg-[#3B82F6] rounded-sm"
-            style={{ height: `${h}%` }}
-          />
-        ))}
-      </div>
-      {/* More lines */}
-      <div className="w-full h-[2px] bg-[#E5E7EB] rounded-sm mt-[2px]" />
-      <div className="w-5/6 h-[2px] bg-[#E5E7EB] rounded-sm" />
-      <div className="w-full h-[2px] bg-[#E5E7EB] rounded-sm" />
+    <span
+      className={`h-[28px] inline-flex items-center px-[10px] rounded-[4px] text-[13px] font-medium whitespace-nowrap cursor-pointer hover:opacity-80 transition-opacity ${c.bg} ${c.text} ${c.border || ""}`}
+    >
+      {!isGray && (
+        <span className={`w-1.5 h-1.5 rounded-full mr-2 ${c.dot}`} />
+      )}
+      {label}
+    </span>
+  );
+}
+
+/* ─── SOTA Display ───────────────────────────────────────────────────────── */
+function SotaDisplay({ sota }: { sota: string }) {
+  if (!sota) return null;
+  const segments = sota.split(" • ");
+
+  return (
+    <div className="flex flex-wrap items-center gap-y-1 gap-x-1.5 mb-[12px] text-[13px]">
+      {segments.map((segment, idx) => {
+        const isSota = segment.startsWith("SOTA on ");
+        const isOn = segment.includes(" on ");
+
+        let prefix = "";
+        let benchmarks = segment;
+
+        if (isSota) {
+          benchmarks = segment.replace("SOTA on ", "");
+        } else if (isOn) {
+          const parts = segment.split(" on ");
+          prefix = parts[0];
+          benchmarks = parts[1];
+        }
+
+        return (
+          <div key={idx} className="flex items-center">
+            {idx > 0 && <span className="text-[#9CA3AF] mx-2 font-normal">•</span>}
+
+            {isSota ? (
+              <>
+                <span className="text-[#B48C52] font-semibold mr-1.5 tracking-wide">SOTA</span>
+                <span className="mr-1.5 text-[11px]">🏆</span>
+                <span className="text-[#718096] mr-1.5 font-normal">on</span>
+                <span className="text-[#1E3A8A] font-mono text-[13px]">{benchmarks}</span>
+              </>
+            ) : isOn ? (
+              <>
+                <span className="text-[#718096] font-normal mr-1.5">{prefix}</span>
+                <span className="text-[#718096] mr-1.5 font-normal">on</span>
+                <span className="text-[#1E3A8A] font-mono text-[13px]">{benchmarks}</span>
+              </>
+            ) : (
+              <span className="text-[#718096] font-normal">{segment}</span>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
 
+/* ─── Thumbnail ──────────────────────────────────────────────────────────── */
+function PaperThumbnail({ title, thumbnail }: { title: string; thumbnail: string }) {
+  return (
+    <div className="w-[170px] h-[230px] shrink-0 border border-[#E5E7EB] rounded-[4px] bg-white overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.07)] relative">
+      <Image
+        src={thumbnail}
+        alt={title}
+        fill
+        className="object-contain object-top"
+        sizes="170px"
+      />
+    </div>
+  );
+}
+
+/* ─── Metric block ───────────────────────────────────────────────────────── */
+function Metric({
+  value,
+  label,
+  children,
+}: {
+  value: string;
+  label: string;
+  children?: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <div className="flex items-center gap-1.5">
+        {children}
+        <span className="text-[14.5px] font-bold text-[#171717] leading-none tabular-nums">
+          {value}
+        </span>
+      </div>
+      <span className="text-[8px] font-bold text-[#999999] uppercase tracking-[0.08em] leading-none">
+        {label}
+      </span>
+    </div>
+  );
+}
+
+/* ─── Paper card ─────────────────────────────────────────────────────────── */
 function PaperCard({ paper }: { paper: (typeof papers)[0] }) {
-  const { colorTags, grayTags } = processTags(paper.tags, paper.additionalTags);
-  const { primary: sotaPrimary, secondary: sotaSecondary } = parseSota(paper.sota);
+  const { colored, gray } = processTags(paper.tags, paper.additionalTags);
+
+  // Parse upvotes string to float for stars/hr, e.g. "11.2K" -> "11.2"
+  const upvotesNum = parseFloat(paper.upvotes) || 38.7;
 
   return (
-    <div className="bg-white border border-[#E5E7EB] rounded-xl p-4 mb-3 flex gap-4 shadow-[0_1px_3px_0_rgb(0,0,0,0.06),0_1px_2px_-1px_rgb(0,0,0,0.06)] hover:shadow-[0_4px_12px_0_rgb(0,0,0,0.08)] transition-shadow cursor-pointer min-w-0">
-      {/* LEFT — Thumbnail */}
-      <PaperThumbnail />
+    <div className="group flex gap-[32px] py-[32px] border-b border-[#ECECEC] bg-white min-w-0 cursor-pointer hover:bg-[#FFF5F9] transition-colors">
+      {/* LEFT — PDF thumbnail */}
+      <PaperThumbnail title={paper.title} thumbnail={paper.thumbnail} />
 
       {/* MIDDLE — Content */}
-      <div className="flex-1 min-w-0">
-        <h3 className="text-[16px] font-bold text-[#111827] leading-snug hover:text-[#7C3AED] transition-colors">
+      <div className="flex-1 min-w-0 flex flex-col pr-8">
+        {/* Title */}
+        <h3 className="text-[21px] font-serif font-medium text-[#1A202C] leading-[1.3] mb-[10px] group-hover:text-[#DB2777] transition-colors">
           {paper.title}
         </h3>
-        <p className="text-[12px] text-[#6B7280] mt-0.5">
-          <span className="font-medium text-[#374151]">{paper.authors}</span>
-          <span className="mx-1.5">·</span>
+
+        {/* Authors + date */}
+        <p className="text-[13px] font-normal text-[#718096] mb-[12px]">
+          {paper.authors}
+          <span className="mx-2 text-[#E2E8F0]">•</span>
           {paper.date}
         </p>
-        <p className="text-[13px] text-[#4B5563] leading-relaxed mt-1.5 line-clamp-3">
+
+        {/* Description */}
+        <p className="text-[13px] font-normal text-[#4A5568] leading-[1.6] mb-[12px] line-clamp-3">
           {paper.description}
         </p>
 
-        {/* SOTA row */}
-        {sotaPrimary && (
-          <div className="flex flex-wrap items-center gap-1.5 mt-2">
-            <Star size={12} className="text-[#F59E0B] fill-[#F59E0B] shrink-0" />
-            <span className="text-[11px] font-semibold text-[#7C3AED]">
-              SOTA on {sotaPrimary}
-            </span>
-            {sotaSecondary && (
-              <span className="text-[11px] text-[#6B7280]">
-                • {sotaSecondary}
-              </span>
-            )}
-          </div>
-        )}
+        {/* Benchmark / SOTA */}
+        <SotaDisplay sota={paper.sota} />
 
-        {/* Tags row 1 (colored pills) */}
-        {colorTags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mt-2">
-            {colorTags.map((tag) => (
-              <Tag key={tag.label} label={tag.label} color={tag.color} />
-            ))}
-          </div>
-        )}
-
-        {/* Tags row 2 (gray pills) */}
-        {grayTags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mt-1">
-            {grayTags.map((tag) => (
-              <span
-                key={tag}
-                className="bg-[#F3F4F6] text-[#374151] text-[11px] font-medium px-2.5 py-0.5 rounded-full cursor-pointer hover:bg-[#E5E7EB] transition-colors"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
+        {/* Tags */}
+        <div className="flex flex-wrap gap-2">
+          {colored.map((t) => (
+            <Pill key={t.label} label={t.label} colorKey={t.color} />
+          ))}
+          {gray.map((t) => (
+            <Pill key={t} label={t} colorKey="gray" />
+          ))}
+        </div>
       </div>
 
-      {/* RIGHT — Stats */}
-      <div className="w-[100px] shrink-0 flex flex-col items-end gap-3">
-        {[
-          { icon: <TrendingUp size={14} />, value: paper.upvotes, label: "Upvotes", color: "text-[#DB2777]" },
-          { icon: <GitFork size={14} />, value: paper.repo, label: "Repo", color: "text-[#374151]" },
-          { icon: <MessageCircle size={14} />, value: paper.citations, label: "Citations", color: "text-[#374151]" },
-        ].map((stat) => (
-          <div key={stat.label} className="flex flex-col items-end">
-            <div className={`flex items-center gap-1 font-bold text-[14px] ${stat.color}`}>
-              {stat.icon}
-              {stat.value}
-            </div>
-            <span className="text-[11px] text-[#9CA3AF] mt-0.5">
-              {stat.label}
-            </span>
-          </div>
-        ))}
+      {/* RIGHT — Metrics */}
+      <div className="shrink-0 flex items-stretch pl-[20px] border-l border-[#ECECEC]">
+        <div className="flex flex-col justify-around items-center w-[64px] py-2">
+          <Metric value={`↑${upvotesNum}`} label="Stars / Hr">
+            {/* Minimal optional icon if needed, omitted to match reference exactly if requested, 
+                but keeping the arrow in value is matching "↑38.7" */}
+          </Metric>
+
+          <Metric value={paper.repo} label="Repo">
+            <Github size={13} className="text-[#666666] shrink-0" />
+          </Metric>
+
+          <Metric value={paper.citations.toString()} label="Citations">
+            <MessageCircle size={13} className="text-[#666666] shrink-0" />
+          </Metric>
+        </div>
       </div>
     </div>
   );
 }
 
+/* ─── List ───────────────────────────────────────────────────────────────── */
 export default function PaperList() {
   return (
-    <div className="pb-8">
+    <div className="pb-12 bg-white">
       {papers.map((paper) => (
         <PaperCard key={paper.id} paper={paper} />
       ))}

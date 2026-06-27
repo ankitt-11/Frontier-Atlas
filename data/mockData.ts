@@ -98,7 +98,7 @@ export const filterTabs = ["Today", "This Week", "This Month", "All time"];
 export const papers = [
   {
     id: 1,
-    thumbnail: "/paper-thumb-1.png",
+    thumbnail: "/papers/glm5.2.jpg",
     title: "GLM-5.2: Built for Long-Horizon Tasks",
     authors: "Z.ai Team",
     date: "Jun 16, 2026",
@@ -114,7 +114,7 @@ export const papers = [
   },
   {
     id: 2,
-    thumbnail: "/paper-thumb-2.png",
+    thumbnail: "/papers/indexache.jpg",
     title: "IndexCache: Accelerating Sparse Attention via Cross-Layer Index Reuse",
     authors: "Yushi Bai, Qian Dong, Ting Jiang, +5 authors",
     date: "Mar 12, 2026",
@@ -130,7 +130,7 @@ export const papers = [
   },
   {
     id: 3,
-    thumbnail: "/paper-thumb-3.png",
+    thumbnail: "/papers/darwin.jpg",
     title: "Darwin Family: MRI-Trust-Weighted Evolutionary Merging for Training-Free Scaling of Language-Model Reasoning",
     authors: "Taebong Kim, Youngik Hong, Minsk Kim, +4 authors",
     date: "May 14, 2026",
@@ -142,6 +142,38 @@ export const papers = [
     upvotes: "7.1K",
     repo: "7.2K",
     citations: 24,
+    conference: "",
+  },
+  {
+    id: 4,
+    thumbnail: "/papers/unlimitedworks.jpg",
+    title: "Unlimited OCR Works",
+    authors: "Youyang Yin, Huanhuan Liu, YY, +14 authors",
+    date: "Jun 22, 2026",
+    description:
+      "Recently, end-to-end OCR models, exemplified by DeepSeek OCR, have once again thrust OCR into the spotlight. A widely held view is that employing a large language model (LLM) as the decoder allows the model to leverage the prior distribution of language, leading to improved OCR performance. However, the downside is equally evident: as the output sequence...",
+    sota: "#2 on OmniDocBench v1.6 • #3 on OmniDocBench v1.5",
+    tags: ["Automatic Speech Recognition", "Language Modeling", "OCR"],
+    additionalTags: ["Key-value cache", "Sliding window attention"],
+    upvotes: "43.4K",
+    repo: "44.3K",
+    citations: 9,
+    conference: "",
+  },
+  {
+    id: 5,
+    thumbnail: "/papers/paddlework.jpg",
+    title: "PaddleOCR-VL-1.6: Expanding the Frontier of Document Parsing with Under-Optimized Region Refinement and Progressive Post-Training",
+    authors: "Zelun Zhang, Hongen Liu, Suyin Liang, +12 authors",
+    date: "Jun 2, 2026",
+    description:
+      "We introduce PaddleOCR-VL-1.6, an upgraded compact document parsing model built upon PaddleOCR-VL-1.5. Although PaddleOCR-VL-1.5 establishes a strong 0.9B baseline, its remaining errors concentrate in under-optimized regions where model behavior is unstable, data coverage is sparse, or supervision is unreliable. Rather than expanding the training corpus...",
+    sota: "SOTA on OmniDocBench v1.6 • Real5-OmniDocBench",
+    tags: ["Document Layout Analysis", "Image Understanding", "OCR", "Reinforcement Learning"],
+    additionalTags: ["GRPO", "Post-training", "Qwen3", "RAG"],
+    upvotes: "3.6K",
+    repo: "3.6K",
+    citations: 5,
     conference: "",
   },
 ];

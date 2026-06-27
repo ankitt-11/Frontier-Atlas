@@ -1,6 +1,5 @@
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
-import DashboardCards from "@/components/DashboardCards";
 import PaperList from "@/components/PaperFeed";
 import PaperTabs from "@/components/PaperTabs";
 import RightSidebar from "@/components/RightSidebar";
@@ -11,8 +10,7 @@ export default function Home() {
       <Navbar />
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
-        <main className="flex-1 overflow-y-auto overflow-x-hidden hide-scroll px-5 py-4 min-w-0">
-          <DashboardCards />
+        <main className="flex-1 overflow-y-auto overflow-x-hidden hide-scroll px-10 pt-6 pb-12 min-w-0">
           <PaperTabs />
           <PaperList />
         </main>
