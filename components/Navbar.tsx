@@ -1,6 +1,5 @@
 "use client";
 
-import { Search, User } from "lucide-react";
 
 export default function Navbar() {
   return (
