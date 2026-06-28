@@ -6,43 +6,23 @@ import Image from "next/image";
 
 /* ─── Tag color map ──────────────────────────────────────────────────────── */
 const TAG_COLORS: Record<string, { bg: string; text: string; dot: string; border?: string }> = {
-  purple: { bg: "bg-[#F3E8FF]", text: "text-[#6B21A8]", dot: "bg-[#9333EA]" },
-  blue: { bg: "bg-[#E0F2FE]", text: "text-[#0369A1]", dot: "bg-[#0284C7]" },
-  green: { bg: "bg-[#E6F3D6]", text: "text-[#2B501B]", dot: "bg-[#5B8D36]" },
-  cyan: { bg: "bg-[#D6F0E6]", text: "text-[#125861]", dot: "bg-[#258B93]" },
-  gray: { bg: "bg-white", text: "text-[#171717]", dot: "", border: "border border-[#E2E8F0]" },
+  purple: { bg: "bg-[#F3E8FF]", text: "text-[#6B21A8]", dot: "bg-[#9333EA]", border: "border border-[#D8B4FE]" },
+  blue: { bg: "bg-[#E0F2FE]", text: "text-[#0369A1]", dot: "bg-[#0284C7]", border: "border border-[#BAE6FD]" },
+  green: { bg: "bg-[#ECFDF5]", text: "text-[#047857]", dot: "bg-[#10B981]", border: "border border-[#A7F3D0]" },
+  cyan: { bg: "bg-[#CFFAFE]", text: "text-[#0E7490]", dot: "bg-[#06B6D4]", border: "border border-[#A5F3FC]" },
+  gray: { bg: "bg-white", text: "text-[#111111]", dot: "", border: "border border-[#E5E5E0]" },
 };
 
 function getTagColor(label: string): string {
   const map: Record<string, string> = {
-    Agents: "green",
-    "Coding Agents": "cyan",
-    "Language Modeling": "cyan",
-    Math: "cyan",
-    "World Knowledge": "green",
-    "Long Context": "purple",
-    Efficiency: "green",
-    Reasoning: "green",
-    "Model Merging": "purple",
-    "Document Layout Analysis": "green",
-    "Image Understanding": "blue",
-    OCR: "purple",
     "Reinforcement Learning": "blue",
+    "Image Understanding": "blue",
+    Agents: "green",
+    "Long Context": "purple",
   };
   return map[label] || "gray";
 }
 
-function processTags(tags: string[], extra: string[] = []) {
-  const all = [...tags, ...extra];
-  const colored: { label: string; color: string }[] = [];
-  const gray: string[] = [];
-  all.forEach((t) => {
-    const c = getTagColor(t);
-    if (c !== "gray") colored.push({ label: t, color: c });
-    else gray.push(t);
-  });
-  return { colored, gray };
-}
 
 /* ─── Pill tag ───────────────────────────────────────────────────────────── */
 function Pill({ label, colorKey }: { label: string; colorKey: string }) {
@@ -51,7 +31,7 @@ function Pill({ label, colorKey }: { label: string; colorKey: string }) {
 
   return (
     <span
-      className={`h-[28px] inline-flex items-center px-[10px] rounded-[4px] text-[13px] font-medium whitespace-nowrap cursor-pointer hover:opacity-80 transition-opacity ${c.bg} ${c.text} ${c.border || ""}`}
+      className={`h-[24px] inline-flex items-center px-2 rounded-[4px] text-[11px] font-mono cursor-pointer hover:opacity-80 transition-opacity ${c.bg} ${c.text} ${c.border || ""}`}
     >
       {!isGray && (
         <span className={`w-1.5 h-1.5 rounded-full mr-2 ${c.dot}`} />
@@ -61,13 +41,15 @@ function Pill({ label, colorKey }: { label: string; colorKey: string }) {
   );
 }
 
+
+
 /* ─── SOTA Display ───────────────────────────────────────────────────────── */
 function SotaDisplay({ sota }: { sota: string }) {
   if (!sota) return null;
   const segments = sota.split(" • ");
 
   return (
-    <div className="flex flex-wrap items-center gap-y-1 gap-x-1.5 mb-[12px] text-[13px]">
+    <div className="mb-3 text-[13px] truncate">
       {segments.map((segment, idx) => {
         const isSota = segment.startsWith("SOTA on ");
         const isOn = segment.includes(" on ");
@@ -84,26 +66,26 @@ function SotaDisplay({ sota }: { sota: string }) {
         }
 
         return (
-          <div key={idx} className="flex items-center">
+          <span key={idx}>
             {idx > 0 && <span className="text-[#9CA3AF] mx-2 font-normal">•</span>}
 
             {isSota ? (
-              <>
+              <span className="whitespace-nowrap">
                 <span className="text-[#B48C52] font-semibold mr-1.5 tracking-wide">SOTA</span>
                 <span className="mr-1.5 text-[11px]">🏆</span>
-                <span className="text-[#718096] mr-1.5 font-normal">on</span>
-                <span className="text-[#1E3A8A] font-mono text-[13px]">{benchmarks}</span>
-              </>
+                <span className="text-[#8B8B8B] mr-1.5 font-normal">on</span>
+                <span className="text-[#1E40AF] font-mono text-[13px]">{benchmarks}</span>
+              </span>
             ) : isOn ? (
-              <>
-                <span className="text-[#718096] font-normal mr-1.5">{prefix}</span>
-                <span className="text-[#718096] mr-1.5 font-normal">on</span>
-                <span className="text-[#1E3A8A] font-mono text-[13px]">{benchmarks}</span>
-              </>
+              <span className="whitespace-nowrap">
+                <span className="text-[#8B8B8B] font-normal mr-1.5">{prefix}</span>
+                <span className="text-[#8B8B8B] mr-1.5 font-normal">on</span>
+                <span className="text-[#1E40AF] font-mono text-[13px]">{benchmarks}</span>
+              </span>
             ) : (
-              <span className="text-[#718096] font-normal">{segment}</span>
+              <span className="text-[#8B8B8B] font-normal">{segment}</span>
             )}
-          </div>
+          </span>
         );
       })}
     </div>
@@ -113,12 +95,12 @@ function SotaDisplay({ sota }: { sota: string }) {
 /* ─── Thumbnail ──────────────────────────────────────────────────────────── */
 function PaperThumbnail({ title, thumbnail }: { title: string; thumbnail: string }) {
   return (
-    <div className="w-[170px] h-[230px] shrink-0 border border-[#E5E7EB] rounded-[4px] bg-white overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.07)] relative">
+    <div className="w-[170px] h-[240px] shrink-0 border border-[#E5E5E0] rounded-none bg-white overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.07)] relative">
       <Image
         src={thumbnail}
         alt={title}
         fill
-        className="object-contain object-top"
+        className="object-cover object-top"
         sizes="170px"
       />
     </div>
@@ -139,11 +121,11 @@ function Metric({
     <div className="flex flex-col items-center gap-1">
       <div className="flex items-center gap-1.5">
         {children}
-        <span className="text-[14.5px] font-bold text-[#171717] leading-none tabular-nums">
+        <span className="text-[14.5px] font-bold text-[#111111] leading-none tabular-nums">
           {value}
         </span>
       </div>
-      <span className="text-[8px] font-bold text-[#999999] uppercase tracking-[0.08em] leading-none">
+      <span className="text-[8px] font-bold text-[#8B8B8B] uppercase tracking-[0.08em] leading-none">
         {label}
       </span>
     </div>
@@ -152,51 +134,57 @@ function Metric({
 
 /* ─── Paper card ─────────────────────────────────────────────────────────── */
 function PaperCard({ paper }: { paper: (typeof papers)[0] }) {
-  const { colored, gray } = processTags(paper.tags, paper.additionalTags);
-
   // Parse upvotes string to float for stars/hr, e.g. "11.2K" -> "11.2"
   const upvotesNum = parseFloat(paper.upvotes) || 38.7;
 
   return (
-    <div className="group flex gap-[32px] py-[32px] border-b border-[#ECECEC] bg-white min-w-0 cursor-pointer hover:bg-[#FFF5F9] transition-colors">
+    <div className="group flex gap-6 py-6 px-6 -mx-6 border-b border-[#E5E5E0] bg-transparent min-w-0 cursor-pointer hover:bg-white hover:shadow-[0_2px_12px_rgba(0,0,0,0.03)] transition-all duration-200 rounded-none">
       {/* LEFT — PDF thumbnail */}
-      <PaperThumbnail title={paper.title} thumbnail={paper.thumbnail} />
+      <div className="flex flex-col justify-center shrink-0">
+        <PaperThumbnail title={paper.title} thumbnail={paper.thumbnail} />
+      </div>
 
-      {/* MIDDLE — Content */}
+      {/* RIGHT — Content */}
       <div className="flex-1 min-w-0 flex flex-col pr-8">
         {/* Title */}
-        <h3 className="text-[21px] font-serif font-medium text-[#1A202C] leading-[1.3] mb-[10px] group-hover:text-[#DB2777] transition-colors">
+        <h3 className="text-[20px] font-serif font-medium text-[#2D2D2D] leading-[1.3] mb-2 group-hover:text-[#F55036] transition-colors">
           {paper.title}
         </h3>
 
         {/* Authors + date */}
-        <p className="text-[13px] font-normal text-[#718096] mb-[12px]">
+        <p className="text-[13px] font-normal text-[#555555] mb-3">
           {paper.authors}
-          <span className="mx-2 text-[#E2E8F0]">•</span>
+          <span className="mx-2 text-[#DCDCD7]">·</span>
           {paper.date}
         </p>
 
         {/* Description */}
-        <p className="text-[13px] font-normal text-[#4A5568] leading-[1.6] mb-[12px] line-clamp-3">
+        <p className="text-[14px] font-normal text-[#555555] leading-[1.6] mb-4">
           {paper.description}
         </p>
 
-        {/* Benchmark / SOTA */}
+        {/* Benchmark / SOTA (Row 1) */}
         <SotaDisplay sota={paper.sota} />
 
-        {/* Tags */}
-        <div className="flex flex-wrap gap-2">
-          {colored.map((t) => (
-            <Pill key={t.label} label={t.label} colorKey={t.color} />
-          ))}
-          {gray.map((t) => (
-            <Pill key={t} label={t} colorKey="gray" />
-          ))}
+        {/* Tasks (Row 2) */}
+        <div className="flex items-center gap-2 mb-2 whitespace-nowrap overflow-hidden">
+          {paper.tags.map((t) => {
+            const colorKey = getTagColor(t);
+            return <Pill key={t} label={t} colorKey={colorKey} />;
+          })}
+        </div>
+
+        {/* Methods (Row 3) */}
+        <div className="flex items-center gap-2 whitespace-nowrap overflow-hidden">
+          {paper.additionalTags?.map((t) => {
+            const colorKey = getTagColor(t);
+            return <Pill key={t} label={t} colorKey={colorKey} />;
+          })}
         </div>
       </div>
 
       {/* RIGHT — Metrics */}
-      <div className="shrink-0 flex items-stretch pl-[20px] border-l border-[#ECECEC]">
+      <div className="shrink-0 flex items-stretch pl-[24px] pr-[32px] border-l border-[#E5E5E0]">
         <div className="flex flex-col justify-around items-center w-[64px] py-2">
           <Metric value={`↑${upvotesNum}`} label="Stars / Hr">
             {/* Minimal optional icon if needed, omitted to match reference exactly if requested, 
@@ -204,11 +192,11 @@ function PaperCard({ paper }: { paper: (typeof papers)[0] }) {
           </Metric>
 
           <Metric value={paper.repo} label="Repo">
-            <Github size={13} className="text-[#666666] shrink-0" />
+            <Github size={13} className="text-[#8B8B8B] shrink-0" />
           </Metric>
 
           <Metric value={paper.citations.toString()} label="Citations">
-            <MessageCircle size={13} className="text-[#666666] shrink-0" />
+            <MessageCircle size={13} className="text-[#8B8B8B] shrink-0" />
           </Metric>
         </div>
       </div>
@@ -219,7 +207,7 @@ function PaperCard({ paper }: { paper: (typeof papers)[0] }) {
 /* ─── List ───────────────────────────────────────────────────────────────── */
 export default function PaperList() {
   return (
-    <div className="pb-12 bg-white">
+    <div className="pb-12 bg-transparent">
       {papers.map((paper) => (
         <PaperCard key={paper.id} paper={paper} />
       ))}

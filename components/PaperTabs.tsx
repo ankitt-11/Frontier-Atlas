@@ -8,7 +8,7 @@ export default function PaperTabs() {
   const [activeTab, setActiveTab] = useState("Today");
 
   return (
-    <div className="border-b border-[#E5E7EB] mb-3">
+    <div className="border-b border-[#E5E5E0] mb-3">
       <div className="flex gap-1">
         {TABS.map((tab) => (
           <button
@@ -17,8 +17,8 @@ export default function PaperTabs() {
             className={`px-1 py-3 mr-8 text-[13px] font-normal border-b transition-all duration-150 cursor-pointer whitespace-nowrap
               ${
                 activeTab === tab
-                  ? "text-[#DB2777] border-[#DB2777]"
-                  : "text-[#6B7280] border-transparent hover:text-[#DB2777] hover:border-transparent"
+                  ? "text-[#111111] border-[#F55036] font-bold"
+                  : "text-[#8B8B8B] border-transparent hover:text-[#111111] hover:border-transparent"
               }`}
           >
             {tab}

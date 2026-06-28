@@ -1,6 +1,7 @@
 "use client";
 
-import { Github } from "lucide-react";
+import { useState } from "react";
+import { ArrowRight, Sparkles, Heart, MessageCircle } from "lucide-react";
 
 // X (Twitter) icon
 function XIcon({ size = 14, className = "" }: { size?: number; className?: string }) {
@@ -20,124 +21,160 @@ function RedditIcon({ size = 14, className = "" }: { size?: number; className?: 
   );
 }
 
+// GitHub icon
+function GithubIcon({ size = 14, className = "" }: { size?: number; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z" />
+    </svg>
+  );
+}
+
 export default function RightSidebar() {
-  const githubRepos = [
-    { name: "microsoft/BitNet", count: "+2.1k" },
-    { name: "huggingface/transformers", count: "+1.8k" },
-    { name: "databricks/dolly", count: "+1.6k" },
-    { name: "vlm-project/vlm", count: "+1.4k" },
-    { name: "unslothai/unsloth", count: "+1.2k" },
+  const [activeTab, setActiveTab] = useState("all");
+
+  const trendingTopics = [
+    {
+      platform: "x",
+      source: "X / Twitter",
+      time: "2h ago",
+      title: "LongRPE 2.0 is a game changer for long context. 10M tokens without quality collapse.",
+      likes: "201",
+      comments: "24",
+    },
+    {
+      platform: "reddit",
+      source: "r/MachineLearning",
+      time: "4h ago",
+      title: "Kimi K2 technical report is insane. 128K context with 1T params and beats GPT-4.1 on coding.",
+      likes: "342",
+      comments: "128",
+    },
+    {
+      platform: "github",
+      source: "huggingface/transformers",
+      time: "6h ago",
+      title: "New fine-tuning recipe that improves reasoning models by 23% on average.",
+      likes: "89",
+      comments: "12",
+    },
+    {
+      platform: "x",
+      source: "X / Twitter",
+      time: "7h ago",
+      title: "MuJoCo World Model Suite introduces the most realistic physics simulation yet.",
+      likes: "77",
+      comments: "31",
+    },
   ];
 
-  const xPosts = [
-    { name: "x.com/levelsio", count: "+2.1k" },
-    { name: "x.com/EMostaque", count: "+1.8k" },
-    { name: "x.com/ai_for_success", count: "+1.6k" },
-    { name: "x.com/deewydas", count: "+1.4k" },
-    { name: "x.com/rowancheung", count: "+1.2k" },
-  ];
-
-  const redditDiscussions = [
-    { name: "r/MachineLearning", count: "+2.1k" },
-    { name: "r/LocalLLaMA", count: "+1.8k" },
-    { name: "r/ArtificialIntelligence", count: "+1.6k" },
-    { name: "r/DeepLearning", count: "+1.4k" },
-    { name: "r/LLMDevs", count: "+1.2k" },
-  ];
+  const filteredTopics = activeTab === "all" 
+    ? trendingTopics 
+    : trendingTopics.filter(topic => topic.platform === activeTab);
 
   return (
-    <aside className="w-[260px] shrink-0 h-full flex flex-col justify-start gap-[24px] overflow-hidden pr-2 mr-6 pt-[48px] pb-12">
-      
-      {/* SECTION 1 — TRENDING ON GITHUB */}
-      <div className="flex flex-col">
-        <div className="flex items-center gap-2 mb-2">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="#111827">
-            <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z" />
-          </svg>
-          <span className="text-[11px] font-bold text-[#111827] uppercase tracking-[0.08em]">
-            TRENDING ON GITHUB
+    <aside className="w-[320px] shrink-0 flex flex-col justify-start pr-4 mr-2 pt-[48px] pb-12">
+      <div className="bg-white border border-[#E5E5E0] shadow-[0_4px_24px_rgba(0,0,0,0.03)] p-5 flex flex-col rounded-none">
+        
+        {/* Header */}
+        <div className="flex items-center gap-2 mb-4">
+          <Sparkles size={16} className="text-[#F55036] fill-transparent" />
+          <span className="text-[15px] font-bold text-[#111111]">
+            What&apos;s happening
           </span>
         </div>
 
-        <div className="flex flex-col gap-[8px]">
-          {githubRepos.map((repo) => (
-            <div key={repo.name} className="flex items-center gap-2 cursor-pointer hover:bg-[#F9F9F9] rounded-lg px-1 -mx-1 transition-colors">
-              <Github size={13} className="text-[#9CA3AF] shrink-0" />
-              <span className="flex-1 text-[12px] text-[#374151] font-medium truncate">
-                {repo.name}
-              </span>
-              <span className="text-[11px] text-[#6B7280] font-medium shrink-0">
-                {repo.count}
-              </span>
-            </div>
-          ))}
+        {/* Filter Tabs */}
+        <div className="flex items-center gap-1 mb-5">
+          <button 
+            onClick={() => setActiveTab("all")}
+            className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-colors ${
+              activeTab === "all" ? "bg-[#EBEBE6] text-[#F55036]" : "text-[#8B8B8B] hover:bg-[#EBEBE6] hover:text-[#111111]"
+            }`}
+          >
+            All
+          </button>
+          <button 
+            onClick={() => setActiveTab("x")}
+            className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-colors ${
+              activeTab === "x" ? "bg-[#EBEBE6] text-[#F55036]" : "text-[#8B8B8B] hover:bg-[#EBEBE6] hover:text-[#111111]"
+            }`}
+          >
+            X/Twitter
+          </button>
+          <button 
+            onClick={() => setActiveTab("reddit")}
+            className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-colors ${
+              activeTab === "reddit" ? "bg-[#EBEBE6] text-[#F55036]" : "text-[#8B8B8B] hover:bg-[#EBEBE6] hover:text-[#111111]"
+            }`}
+          >
+            Reddit
+          </button>
+          <button 
+            onClick={() => setActiveTab("github")}
+            className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-colors ${
+              activeTab === "github" ? "bg-[#EBEBE6] text-[#F55036]" : "text-[#8B8B8B] hover:bg-[#EBEBE6] hover:text-[#111111]"
+            }`}
+          >
+            GitHub
+          </button>
         </div>
 
-        <button className="text-[11px] text-[#7C3AED] flex items-center gap-1 mt-1.5 hover:underline cursor-pointer bg-transparent border-0 p-0">
-          View all trending repos &rarr;
+        {/* List */}
+        <div className="flex flex-col min-h-[300px]">
+          {filteredTopics.length === 0 ? (
+            <div className="flex items-center justify-center py-10 text-[13px] font-semibold text-[#8B8B8B]">
+              No topics found.
+            </div>
+          ) : (
+            filteredTopics.map((topic, idx) => (
+            <div key={idx} className="flex gap-4 py-4 border-b border-[#E5E5E0] last:border-b-0 group cursor-pointer">
+              
+              {/* Raw Icon */}
+              <div className="shrink-0 pt-0.5">
+                {topic.platform === "x" && <XIcon size={22} className="text-[#111111]" />}
+                {topic.platform === "reddit" && <RedditIcon size={24} className="text-[#111111]" />}
+                {topic.platform === "github" && <GithubIcon size={22} className="text-[#111111]" />}
+              </div>
+
+              {/* Content */}
+              <div className="flex-1 flex flex-col min-w-0">
+                {/* Meta */}
+                <div className="flex items-center gap-1.5 text-[11px] font-medium mb-1">
+                  <span className="text-[#555555]">{topic.source}</span>
+                  <span className="text-[#DCDCD7]">•</span>
+                  <span className="text-[#8B8B8B]">{topic.time}</span>
+                </div>
+                
+                {/* Title */}
+                <h4 className="text-[13px] font-bold text-[#111111] leading-[1.5] mb-3 group-hover:text-[#F55036] transition-colors">
+                  {topic.title}
+                </h4>
+
+                {/* Stats */}
+                <div className="flex items-center gap-4 text-[11px] font-semibold text-[#8B8B8B]">
+                  <div className="flex items-center gap-1.5">
+                    <Heart size={14} className="text-[#8B8B8B]" />
+                    <span>{topic.likes}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <MessageCircle size={14} className="text-[#8B8B8B]" />
+                    <span>{topic.comments}</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            ))
+          )}
+        </div>
+
+        {/* Footer Button */}
+        <button className="w-full border border-[#E5E5E0] text-[#F55036] bg-white hover:border-[#F55036] hover:bg-[#F8F7F2] hover:text-[#E0462D] rounded-[8px] py-[10px] flex items-center justify-center gap-1.5 font-bold text-[12px] mt-2 transition-colors cursor-pointer">
+          View all discussions <ArrowRight size={14} strokeWidth={2.5} />
         </button>
 
-        <div className="border-t border-[#EBEBEB] mt-3" />
       </div>
-
-      {/* SECTION 2 — TRENDING ON X */}
-      <div className="flex flex-col">
-        <div className="flex items-center gap-2 mb-2">
-          <XIcon size={15} className="text-[#111827]" />
-          <span className="text-[11px] font-bold text-[#111827] uppercase tracking-[0.08em]">
-            TRENDING ON X
-          </span>
-        </div>
-
-        <div className="flex flex-col gap-[8px]">
-          {xPosts.map((post) => (
-            <div key={post.name} className="flex items-center gap-2 cursor-pointer hover:bg-[#F9F9F9] rounded-lg px-1 -mx-1 transition-colors">
-              <XIcon size={11} className="text-[#111827] shrink-0" />
-              <span className="flex-1 text-[12px] text-[#374151] font-medium truncate">
-                {post.name}
-              </span>
-              <span className="text-[11px] text-[#6B7280] font-medium shrink-0">
-                {post.count}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        <button className="text-[11px] text-[#7C3AED] flex items-center gap-1 mt-1.5 hover:underline cursor-pointer bg-transparent border-0 p-0">
-          View all trending posts &rarr;
-        </button>
-
-        <div className="border-t border-[#EBEBEB] mt-3" />
-      </div>
-
-      {/* SECTION 3 — TRENDING ON REDDIT */}
-      <div className="flex flex-col">
-        <div className="flex items-center gap-2 mb-2">
-          <RedditIcon size={16} className="text-[#FF4500]" />
-          <span className="text-[11px] font-bold text-[#111827] uppercase tracking-[0.08em]">
-            TRENDING ON REDDIT
-          </span>
-        </div>
-
-        <div className="flex flex-col gap-[8px]">
-          {redditDiscussions.map((discussion) => (
-            <div key={discussion.name} className="flex items-center gap-2 cursor-pointer hover:bg-[#F9F9F9] rounded-lg px-1 -mx-1 transition-colors">
-              <RedditIcon size={13} className="text-[#FF4500] shrink-0" />
-              <span className="flex-1 text-[12px] text-[#374151] font-medium truncate">
-                {discussion.name}
-              </span>
-              <span className="text-[11px] text-[#6B7280] font-medium shrink-0">
-                {discussion.count}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        <button className="text-[11px] text-[#7C3AED] flex items-center gap-1 mt-1.5 hover:underline cursor-pointer bg-transparent border-0 p-0">
-          View all trending discussions &rarr;
-        </button>
-      </div>
-
     </aside>
   );
 }

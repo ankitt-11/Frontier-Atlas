@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[9px] font-semibold text-[#9CA3AF] uppercase tracking-[0.08em] px-3 mb-0.5 mt-2 first:mt-1">
+    <p className="text-[9px] font-semibold text-[#8B8B8B] uppercase tracking-[0.08em] px-3 mb-0.5 mt-2 first:mt-1">
       {children}
     </p>
   );
@@ -31,10 +31,10 @@ function NavItem({
     <div
       onClick={onClick}
       className={cn(
-        "flex items-center gap-2 px-3 py-[4px] mx-2 rounded-lg cursor-pointer transition-colors text-[11px] font-medium",
+        "flex items-center gap-2 px-3 py-[4px] mx-2 cursor-pointer transition-colors text-[11px] font-medium",
         isActive
-          ? "bg-[#FFF0F5] text-[#DB2777] font-semibold"
-          : "hover:bg-[#FFF5F9] text-[#374151]"
+          ? "text-[#F55036] font-bold"
+          : "text-[#555555] hover:text-[#F55036]"
       )}
     >
       <span className="w-3.5 h-3.5 flex items-center justify-center text-[13px] shrink-0">
@@ -49,7 +49,7 @@ export default function Sidebar() {
   const [activeItem, setActiveItem] = useState("Trending Papers");
 
   const discover = [
-    { label: "Trending Papers", icon: <Flame size={14} className={activeItem === "Trending Papers" ? "text-[#DB2777] fill-[#DB2777]" : ""} /> },
+    { label: "Trending Papers", icon: <Flame size={14} className={activeItem === "Trending Papers" ? "text-[#F55036] fill-[#F55036]" : ""} /> },
     { label: "Latest Papers", icon: <Clock size={14} /> },
     { label: "Most GitHub Stars", icon: <Star size={14} /> },
   ];
@@ -82,7 +82,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-[200px] shrink-0 bg-white border-r border-[#E5E7EB] overflow-hidden py-2">
+    <aside className="w-[240px] shrink-0 bg-[#F8F7F2] border-r border-[#E5E5E0] overflow-hidden py-2 pl-6">
       <SectionLabel>DISCOVER</SectionLabel>
       {discover.map((item) => (
         <NavItem
