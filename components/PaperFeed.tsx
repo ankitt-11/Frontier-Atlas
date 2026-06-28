@@ -49,7 +49,7 @@ function SotaDisplay({ sota }: { sota: string }) {
   const segments = sota.split(" • ");
 
   return (
-    <div className="mb-3 text-[13px] truncate">
+    <div className="mb-[12px] text-[11.5px] tracking-tight whitespace-nowrap flex items-center">
       {segments.map((segment, idx) => {
         const isSota = segment.startsWith("SOTA on ");
         const isOn = segment.includes(" on ");
@@ -66,24 +66,24 @@ function SotaDisplay({ sota }: { sota: string }) {
         }
 
         return (
-          <span key={idx}>
-            {idx > 0 && <span className="text-[#9CA3AF] mx-2 font-normal">•</span>}
+          <span key={idx} className="inline-flex items-center">
+            {idx > 0 && <span className="text-[#9CA3AF] mx-1.5 font-normal">•</span>}
 
             {isSota ? (
-              <span className="whitespace-nowrap">
-                <span className="text-[#B48C52] font-semibold mr-1.5 tracking-wide">SOTA</span>
-                <span className="mr-1.5 text-[11px]">🏆</span>
-                <span className="text-[#8B8B8B] mr-1.5 font-normal">on</span>
-                <span className="text-[#1E40AF] font-mono text-[13px]">{benchmarks}</span>
-              </span>
+              <>
+                <span className="text-[#B48C52] font-semibold mr-1 tracking-wide">SOTA</span>
+                <span className="mr-1 text-[10px]">🏆</span>
+                <span className="text-[#8B8B8B] mr-1 font-normal">on</span>
+                <span className="text-[#1E40AF] font-mono text-[11.5px] tracking-tighter">{benchmarks}</span>
+              </>
             ) : isOn ? (
-              <span className="whitespace-nowrap">
-                <span className="text-[#8B8B8B] font-normal mr-1.5">{prefix}</span>
-                <span className="text-[#8B8B8B] mr-1.5 font-normal">on</span>
-                <span className="text-[#1E40AF] font-mono text-[13px]">{benchmarks}</span>
-              </span>
+              <>
+                <span className="text-[#8B8B8B] font-normal mr-1">{prefix}</span>
+                <span className="text-[#8B8B8B] mr-1 font-normal">on</span>
+                <span className="text-[#1E40AF] font-mono text-[11.5px] tracking-tighter">{benchmarks}</span>
+              </>
             ) : (
-              <span className="text-[#8B8B8B] font-normal">{segment}</span>
+              <span className="text-[#8B8B8B] font-normal tracking-tight">{segment}</span>
             )}
           </span>
         );
@@ -147,7 +147,7 @@ function PaperCard({ paper }: { paper: (typeof papers)[0] }) {
       {/* RIGHT — Content */}
       <div className="flex-1 min-w-0 flex flex-col pr-8">
         {/* Title */}
-        <h3 className="text-[20px] font-serif font-medium text-[#2D2D2D] leading-[1.3] mb-2 group-hover:text-[#F55036] transition-colors">
+        <h3 className="text-[20px] font-serif font-medium text-[#2D2D2D] leading-[1.3] mb-2 group-hover:text-[#F55036] transition-colors line-clamp-2">
           {paper.title}
         </h3>
 
@@ -159,7 +159,7 @@ function PaperCard({ paper }: { paper: (typeof papers)[0] }) {
         </p>
 
         {/* Description */}
-        <p className="text-[14px] font-normal text-[#555555] leading-[1.6] mb-4">
+        <p className="text-[14px] font-normal text-[#555555] leading-[1.6] mb-4 line-clamp-3">
           {paper.description}
         </p>
 
